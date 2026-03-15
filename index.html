@@ -6,21 +6,29 @@
     <title>UoVT Navigator - Support Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #64748b; }
+        /* Modern Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        #chat-messages {
-            height: 400px;
-            overflow-y: auto;
+        /* Window structure - Fixed height prevents UI issues */
+        #chat-window {
+            height: 550px; 
             display: flex;
             flex-direction: column;
-            padding: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Message area expands to fill the middle */
+        #chat-messages {
+            flex: 1; 
+            overflow-y: auto;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
             gap: 1rem;
-            scroll-behavior: smooth;
-            background: #f9fafb;
+            background: #f8fafc;
         }
 
         @keyframes fadeIn {
@@ -32,52 +40,57 @@
 </head>
 <body class="bg-gray-100 h-screen w-screen relative overflow-hidden font-sans">
 
-    <button id="chat-toggle" class="fixed bottom-6 right-6 bg-[#1e3a8a] text-white p-4 rounded-full shadow-2xl hover:bg-blue-900 transition-all transform hover:scale-105 z-50 flex items-center justify-center">
+    <button id="chat-toggle" class="fixed bottom-6 right-6 bg-[#1e3a8a] text-white p-4 rounded-full shadow-2xl hover:bg-blue-900 transition-all transform hover:scale-110 z-50 flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
         </svg>
     </button>
 
-    <div id="chat-window" class="fixed bottom-24 right-6 w-[22rem] sm:w-96 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 z-50 hidden transition-all duration-300">
+    <div id="chat-window" class="fixed bottom-24 right-6 w-[22rem] sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 hidden flex flex-col overflow-hidden">
         
-        <div class="bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white p-4 flex justify-between items-center shadow-md">
+        <div class="bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white p-4 flex justify-between items-center shrink-0 shadow-sm">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden border-2 border-blue-400">
-                    <img src="logo-01.png" alt="UoVT Logo" class="w-full h-full object-contain">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden border-2 border-blue-300 shrink-0">
+                    <img 
+                        src="./logo-01.png" 
+                        alt="UoVT" 
+                        class="w-full h-full object-contain"
+                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=UoVT&background=fff&color=1e3a8a';"
+                    >
                 </div>
                 <div>
-                    <h3 class="font-bold text-md tracking-wide leading-none">UoVT Navigator</h3>
+                    <h3 class="font-bold text-md leading-none tracking-wide">UoVT Navigator</h3>
                     <span class="text-[10px] text-blue-200 flex items-center mt-1">
-                        <span class="w-2 h-2 bg-green-400 rounded-full mr-1 animate-pulse"></span> Online Support
+                        <span class="w-2 h-2 bg-green-400 rounded-full mr-1 animate-pulse"></span> Virtual Assistant
                     </span>
                 </div>
             </div>
-            <button id="close-chat" class="text-white hover:text-gray-200 p-1">
+            <button id="close-chat" class="text-white hover:text-gray-300 transition-colors p-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
 
-        <div id="chat-messages" class="custom-scrollbar flex-1 bg-gray-50">
-            <div class="flex flex-col space-y-1 items-start message-animate">
-                <div class="bg-white text-gray-800 p-3.5 rounded-2xl rounded-tl-sm shadow-sm max-w-[85%] border border-gray-100 text-sm">
-                    Welcome to the University of Vocational Technology! 👋<br><br>How can I assist you today?
+        <div id="chat-messages" class="custom-scrollbar">
+            <div class="flex flex-col items-start message-animate">
+                <div class="bg-white text-gray-800 p-3.5 rounded-2xl rounded-tl-sm shadow-sm max-w-[85%] border border-gray-100 text-sm leading-relaxed">
+                    Welcome to the University of Vocational Technology! 👋<br><br>How can I help you today?
                 </div>
             </div>
         </div>
 
-        <div id="typing-indicator" class="hidden px-4 pb-3 bg-gray-50 message-animate">
-            <div class="bg-white border border-gray-100 shadow-sm rounded-2xl px-4 py-2 max-w-[fit-content] flex items-center space-x-1">
-                <div class="w-1 h-1 bg-blue-600 rounded-full animate-bounce"></div>
-                <div class="w-1 h-1 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                <div class="w-1 h-1 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+        <div id="typing-indicator" class="hidden px-5 py-2 bg-[#f8fafc]">
+            <div class="bg-white border border-gray-100 shadow-sm rounded-2xl px-4 py-2 flex items-center space-x-1 w-fit">
+                <div class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce"></div>
+                <div class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                <div class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
             </div>
         </div>
 
-        <div class="border-t border-gray-100 p-3 bg-white flex items-end space-x-2">
-            <textarea id="chat-input" rows="1" placeholder="Type your question..." class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"></textarea>
-            <button id="send-btn" class="bg-[#1e3a8a] text-white p-3 rounded-xl hover:bg-blue-800 h-[44px] flex items-center justify-center">
+        <div class="border-t border-gray-100 p-3 bg-white flex items-end space-x-2 shrink-0">
+            <textarea id="chat-input" rows="1" placeholder="Type your message..." class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none overflow-hidden transition-all"></textarea>
+            <button id="send-btn" class="bg-[#1e3a8a] text-white p-3 rounded-xl hover:bg-blue-800 transition-colors flex items-center justify-center shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
@@ -86,7 +99,7 @@
     </div>
 
     <script>
-        // THIS URL MUST MATCH THE PRODUCTION WEBHOOK URL IN N8N
+        // REPLACE THIS URL with your latest Cloudflare Tunnel link if it changes
         const N8N_WEBHOOK_URL = 'https://expand-finishing-blue-carolina.trycloudflare.com/webhook/6b195228-08af-4d8c-9a8b-e9b7363f7b9c/chat';
 
         const chatToggle = document.getElementById('chat-toggle');
@@ -97,51 +110,37 @@
         const sendBtn = document.getElementById('send-btn');
         const typingIndicator = document.getElementById('typing-indicator');
 
-        let userHasScrolledUp = false;
-
-        chatMessages.addEventListener('scroll', () => {
-            const distanceFromBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight;
-            userHasScrolledUp = distanceFromBottom > 80;
-        });
-
-        chatToggle.addEventListener('click', () => {
-            chatWindow.classList.remove('hidden');
-            chatToggle.classList.add('hidden');
-        });
-
-        closeChat.addEventListener('click', () => {
-            chatWindow.classList.add('hidden');
-            chatToggle.classList.remove('hidden');
-        });
+        // Toggle visibility
+        chatToggle.onclick = () => { chatWindow.classList.remove('hidden'); chatToggle.classList.add('hidden'); };
+        closeChat.onclick = () => { chatWindow.classList.add('hidden'); chatToggle.classList.remove('hidden'); };
 
         function appendMessage(text, sender) {
             const msgDiv = document.createElement('div');
             msgDiv.className = `flex flex-col space-y-1 message-animate ${sender === 'user' ? 'items-end' : 'items-start'}`;
             
-            const bubble = document.createElement('div');
-            bubble.className = `p-3.5 rounded-2xl shadow-sm max-w-[85%] text-sm border leading-relaxed ${
-                sender === 'user' 
-                    ? 'bg-[#1e3a8a] text-white rounded-tr-sm shadow-blue-200' 
-                    : 'bg-white text-gray-800 rounded-tl-sm border-gray-100'
-            }`;
+            const isUser = sender === 'user';
+            msgDiv.innerHTML = `
+                <div class="p-3.5 rounded-2xl shadow-sm max-w-[85%] text-sm border leading-relaxed 
+                    ${isUser ? 'bg-[#1e3a8a] text-white rounded-tr-sm shadow-blue-100' : 'bg-white text-gray-800 rounded-tl-sm border-gray-100'}">
+                    ${text}
+                </div>
+            `;
             
-            bubble.innerText = text;
-            msgDiv.appendChild(bubble);
             chatMessages.appendChild(msgDiv);
-
-            if (!userHasScrolledUp) {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
+            // Always scroll to latest message
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         async function sendMessage() {
             const text = chatInput.value.trim();
             if (!text) return;
 
+            // 1. Add User Message
             appendMessage(text, 'user');
             chatInput.value = '';
-            chatInput.style.height = 'auto'; // Reset height
-            
+            chatInput.style.height = 'auto'; // Reset input box size
+
+            // 2. Show Typing Indicator
             typingIndicator.classList.remove('hidden');
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -149,38 +148,39 @@
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    // "chatInput" is the standard key n8n's Chat Trigger looks for
                     body: JSON.stringify({ chatInput: text, sessionId: 'uovt-production-user' })
                 });
 
-                if (!response.ok) throw new Error('n8n response error');
+                if (!response.ok) throw new Error('Network response was not ok');
 
                 const data = await response.json();
                 typingIndicator.classList.add('hidden');
 
-                // n8n returns "output" or "text" depending on your node config
-                const botResponse = data.output || data.text || "I processed your request but have no text output.";
-                appendMessage(botResponse, 'bot');
+                // 3. Add Bot Message (Mapping correctly to "output")
+                const reply = data.output || data.text || "I'm having trouble retrieving a response.";
+                appendMessage(reply, 'bot');
 
             } catch (error) {
                 typingIndicator.classList.add('hidden');
-                appendMessage("⚠️ Connection error. Please ensure your n8n and Cloudflare tunnel are running.", 'bot');
-                console.error('Error sending message to n8n:', error);
+                appendMessage("⚠️ Error: Unable to reach the server. Please ensure the backend is running.", 'bot');
+                console.error('Fetch error:', error);
             }
         }
 
-        sendBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keydown', (e) => {
+        // Event Listeners
+        sendBtn.onclick = sendMessage;
+        chatInput.onkeydown = (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
-        });
+        };
 
-        chatInput.addEventListener('input', () => {
+        // Auto-resize textarea as user types
+        chatInput.oninput = () => {
             chatInput.style.height = 'auto';
             chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
-        });
+        };
     </script>
 </body>
 </html>
